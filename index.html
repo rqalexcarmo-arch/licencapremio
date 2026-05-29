@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — Licença-Prêmio em Pecúnia | Carmo Sociedade de Advocacia</title>
+<meta name="description" content="Servidor aposentado: organize os documentos da sua ação de licença-prêmio em pecúnia e fale com a Dra. Raquel Carmo (OAB/RJ 189.033)." />
+<meta name="theme-color" content="#0B1E3F" />
+<style>
+  :root {
+    --navy: #0B1E3F;
+    --navy-2: #122B58;
+    --navy-3: #1A3060;
+    --navy-deep: #07142D;
+    --gold: #C9A44C;
+    --gold-2: #E8D49A;
+    --gold-deep: #A48232;
+    --cream: #F4F1EA;
+    --paper: #FBF8F1;
+    --ink: #1B1B1B;
+    --grey: #5A5A5A;
+    --grey-light: #E8E4DA;
+    --ok: #2E7D32;
+    --shadow: 0 10px 30px rgba(7,20,45,0.18);
+    --shadow-sm: 0 4px 12px rgba(7,20,45,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 90px;
+  }
+  a { color: var(--gold-deep); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ============== HEADER ============== */
+  header.topbar {
+    background: var(--navy);
+    color: white;
+    padding: 14px 20px;
+    border-bottom: 3px solid var(--gold);
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: var(--shadow-sm);
+  }
+  .topbar-inner {
+    max-width: 980px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 38px; height: 38px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+    display: grid; place-items: center;
+    color: var(--navy); font-weight: 800; font-size: 18px;
+  }
+  .brand-text { line-height: 1.1; }
+  .brand-text b { font-size: 14px; letter-spacing: 0.5px; }
+  .brand-text span { font-size: 11px; color: var(--gold-2); }
+  .topbar-oab {
+    font-size: 12px; color: var(--gold-2); text-align: right;
+  }
+  .topbar-oab b { color: white; }
+
+  /* ============== HERO ============== */
+  .hero {
+    background:
+      radial-gradient(800px 400px at 80% 0%, rgba(201,164,76,0.12), transparent 60%),
+      linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: white;
+    padding: 36px 20px 28px;
+  }
+  .hero-inner { max-width: 980px; margin: 0 auto; }
+  .eyebrow {
+    display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    color: var(--gold); background: rgba(201,164,76,0.12);
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 14px;
+    border: 1px solid rgba(201,164,76,0.30);
+  }
+  .hero h1 {
+    font-size: clamp(24px, 5vw, 34px); line-height: 1.15; font-weight: 800;
+    margin-bottom: 10px;
+  }
+  .hero h1 .gold { color: var(--gold); }
+  .hero p { color: var(--cream); font-size: 15px; max-width: 720px; }
+  .hero p b { color: white; }
+
+  /* progress card */
+  .progress-card {
+    background: white; color: var(--ink); border-radius: 14px;
+    padding: 18px 18px 16px; margin-top: 22px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--grey-light);
+  }
+  .progress-top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 12px; margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .progress-top b { font-size: 15px; color: var(--navy); }
+  .progress-top .counter {
+    font-size: 13px; color: var(--grey);
+  }
+  .progress-bar {
+    height: 12px; background: var(--grey-light); border-radius: 999px;
+    overflow: hidden; position: relative;
+  }
+  .progress-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold));
+    border-radius: 999px;
+    transition: width 0.5s cubic-bezier(.2,.8,.2,1);
+  }
+  .progress-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 12px; font-size: 13px; color: var(--grey);
+    flex-wrap: wrap; gap: 8px;
+  }
+  .progress-foot b { color: var(--ok); }
+
+  /* ============== CTA HERO ============== */
+  .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 22px; border-radius: 10px; font-weight: 700; font-size: 14px;
+    border: none; cursor: pointer; text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); text-decoration: none; }
+  .btn-gold {
+    background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 60%, var(--gold-deep) 100%);
+    color: var(--navy); border: 1px solid var(--gold-deep);
+    box-shadow: 0 6px 16px rgba(201,164,76,0.30);
+  }
+  .btn-gold:hover { filter: brightness(1.05); }
+  .btn-outline {
+    background: transparent; color: var(--gold-2);
+    border: 1px solid rgba(201,164,76,0.5);
+  }
+  .btn-outline:hover { background: rgba(201,164,76,0.10); }
+
+  /* ============== FUNDAMENTO ============== */
+  .fund {
+    max-width: 980px; margin: 24px auto; padding: 0 20px;
+  }
+  .fund-card {
+    background: white; border: 1px solid var(--grey-light); border-radius: 14px;
+    padding: 18px 20px; box-shadow: var(--shadow-sm);
+    display: grid; grid-template-columns: 60px 1fr; gap: 14px; align-items: start;
+  }
+  .fund-icon {
+    width: 56px; height: 56px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--navy), var(--navy-2));
+    display: grid; place-items: center; color: var(--gold);
+    font-size: 26px;
+  }
+  .fund-card h3 { color: var(--navy); font-size: 16px; margin-bottom: 4px; }
+  .fund-card p { font-size: 14px; color: var(--ink); }
+  .fund-card .badges {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+  }
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(11,30,63,0.08); color: var(--navy);
+    letter-spacing: 0.3px;
+  }
+  .badge.gold { background: rgba(201,164,76,0.16); color: var(--gold-deep); }
+
+  /* Zero-friction proof chips */
+  .zero-list {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;
+    padding-top: 14px; border-top: 1px dashed var(--grey-light);
+  }
+  .zero-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(46,125,50,0.08); color: var(--ok);
+    padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    border: 1px solid rgba(46,125,50,0.25);
+    line-height: 1.1;
+  }
+  .zero-chip .x {
+    display: inline-grid; place-items: center;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--ok); color: white; font-size: 11px; font-weight: 800;
+  }
+
+  /* ============== CALCULATOR ============== */
+  .calc { max-width: 980px; margin: 30px auto; padding: 0 20px; }
+  .calc-card {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    border-radius: 16px; padding: 26px 22px; color: white;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--gold);
+    position: relative; overflow: hidden;
+  }
+  .calc-card::before {
+    content: ""; position: absolute;
+    top: -40%; right: -10%; width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(201,164,76,0.15), transparent 70%);
+    pointer-events: none;
+  }
+  .calc-card h2 {
+    font-size: clamp(20px, 3.5vw, 26px); margin: 10px 0 6px;
+    position: relative; line-height: 1.2;
+  }
+  .calc-card h2 .gold { color: var(--gold); }
+  .calc-card > p { color: var(--cream); margin-bottom: 22px; font-size: 14px; position: relative; }
+
+  .calc-form { display: grid; gap: 18px; position: relative; }
+  .calc-field { display: flex; flex-direction: column; gap: 8px; }
+  .calc-field > label {
+    font-size: 12px; font-weight: 700; color: var(--gold);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  .slider-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center;
+  }
+  .slider-wrap { padding: 10px 0; }
+  .slider-wrap input[type="range"] {
+    width: 100%; height: 6px; appearance: none; -webkit-appearance: none;
+    background: rgba(255,255,255,0.18); border-radius: 999px; outline: none;
+    cursor: pointer;
+  }
+  .slider-wrap input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 26px; height: 26px;
+    background: var(--gold); border-radius: 50%; cursor: pointer;
+    border: 3px solid var(--navy);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.30);
+  }
+  .slider-wrap input[type="range"]::-moz-range-thumb {
+    width: 26px; height: 26px;
+    background: var(--gold); border-radius: 50%; cursor: pointer;
+    border: 3px solid var(--navy);
+  }
+  .slider-value {
+    background: var(--gold); color: var(--navy);
+    padding: 8px 14px; border-radius: 8px; font-weight: 800; font-size: 16px;
+    min-width: 90px; text-align: center;
+  }
+  .slider-value small { display: block; font-size: 10px; font-weight: 600; opacity: 0.75; }
+
+  .calc-field select, .calc-field input[type="number"] {
+    width: 100%; padding: 14px 16px; font-size: 16px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.20);
+    border-radius: 10px; color: white;
+    font-family: inherit; -webkit-appearance: none; appearance: none;
+  }
+  .calc-field select option { background: var(--navy); color: white; }
+  .calc-field select:focus, .calc-field input:focus {
+    outline: none; border-color: var(--gold);
+    background: rgba(255,255,255,0.12);
+  }
+
+  .input-wrap { position: relative; }
+  .input-wrap .prefix {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--gold); font-weight: 700; font-size: 16px; pointer-events: none;
+  }
+  .input-wrap input { padding-left: 52px; }
+
+  .btn-calc {
+    width: 100%; justify-content: center; font-size: 14px;
+    padding: 16px 22px; margin-top: 4px;
+  }
+
+  .calc-result {
+    margin-top: 22px; padding: 22px 18px; border-radius: 14px;
+    background: rgba(201,164,76,0.10);
+    border: 1px solid rgba(201,164,76,0.40);
+    text-align: center; position: relative;
+    animation: fadein 0.5s ease;
+  }
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .calc-label {
+    font-size: 11px; color: var(--gold); text-transform: uppercase;
+    letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 700;
+  }
+  .calc-amount {
+    font-size: clamp(28px, 6vw, 40px); font-weight: 800; color: var(--gold);
+    margin-bottom: 4px; line-height: 1.1;
+  }
+  .calc-range {
+    color: var(--cream); font-size: 13px; margin-bottom: 14px;
+  }
+  .calc-range b { color: white; }
+  .calc-tip {
+    display: inline-block; font-size: 11px; padding: 5px 12px;
+    background: rgba(201,164,76,0.18); color: var(--gold-2);
+    border-radius: 999px; border: 1px solid rgba(201,164,76,0.30);
+    margin-bottom: 14px;
+  }
+  .calc-disclaimer {
+    font-size: 11px; color: rgba(255,255,255,0.60); line-height: 1.5;
+    font-style: italic; margin: 14px 0 18px; max-width: 520px;
+    margin-left: auto; margin-right: auto;
+  }
+  .calc-cta { width: 100%; max-width: 360px; justify-content: center; }
+
+  /* ============== CHECKLIST ============== */
+  .checklist {
+    max-width: 980px; margin: 30px auto; padding: 0 20px;
+  }
+  .checklist h2 {
+    font-size: 22px; color: var(--navy); margin-bottom: 6px;
+  }
+  .checklist > p {
+    color: var(--grey); font-size: 14px; margin-bottom: 20px;
+  }
+  .block {
+    background: white; border-radius: 14px; overflow: hidden;
+    box-shadow: var(--shadow-sm); border: 1px solid var(--grey-light);
+    margin-bottom: 16px;
+  }
+  .block-head {
+    background: var(--navy); color: white; padding: 14px 18px;
+    display: flex; align-items: center; gap: 14px; cursor: pointer;
+    user-select: none;
+    border-bottom: 2px solid var(--gold);
+  }
+  .block-head .num {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--gold); color: var(--navy);
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 14px;
+  }
+  .block-head .title { flex: 1; font-weight: 700; font-size: 14px; letter-spacing: 0.4px; }
+  .block-head .count {
+    font-size: 12px; color: var(--gold-2);
+    background: rgba(201,164,76,0.18);
+    padding: 4px 10px; border-radius: 999px;
+    border: 1px solid rgba(201,164,76,0.35);
+  }
+  .block-head .chev {
+    width: 24px; height: 24px; transition: transform 0.25s ease;
+  }
+  .block.open .block-head .chev { transform: rotate(180deg); }
+  .block-body {
+    max-height: 0; overflow: hidden; transition: max-height 0.35s ease;
+    background: var(--paper);
+  }
+  .block.open .block-body { max-height: 2000px; }
+  .item {
+    display: flex; gap: 14px; padding: 14px 18px;
+    border-bottom: 1px solid var(--grey-light);
+    cursor: pointer; transition: background 0.15s ease;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: rgba(201,164,76,0.05); }
+  .item input[type="checkbox"] {
+    appearance: none; -webkit-appearance: none;
+    width: 24px; height: 24px; min-width: 24px;
+    border-radius: 6px; border: 2px solid var(--navy);
+    background: white; cursor: pointer; position: relative;
+    margin-top: 1px;
+    transition: all 0.15s ease;
+  }
+  .item input[type="checkbox"]:checked {
+    background: var(--gold); border-color: var(--gold-deep);
+  }
+  .item input[type="checkbox"]:checked::after {
+    content: ""; position: absolute; left: 6px; top: 1px;
+    width: 6px; height: 12px;
+    border: solid var(--navy); border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  }
+  .item-label {
+    flex: 1; font-size: 14px; line-height: 1.4; color: var(--ink);
+  }
+  .item input[type="checkbox"]:checked + .item-label {
+    color: var(--grey); text-decoration: line-through;
+  }
+  .item .num-mini {
+    font-weight: 700; color: var(--navy); margin-right: 4px;
+  }
+
+  /* ============== HELP CARD ============== */
+  .help {
+    max-width: 980px; margin: 30px auto; padding: 0 20px;
+  }
+  .help-card {
+    background: linear-gradient(135deg, var(--gold-2) 0%, var(--gold) 100%);
+    border-radius: 14px; padding: 22px; color: var(--navy);
+    box-shadow: var(--shadow);
+  }
+  .help-card h3 { font-size: 18px; margin-bottom: 8px; }
+  .help-card p { font-size: 14px; margin-bottom: 14px; }
+  .help-card .btn { background: var(--navy); color: white; border: none; }
+  .help-card .btn:hover { filter: brightness(1.15); }
+
+  /* ============== DIAGNOSTIC CTA ============== */
+  .diagnostic {
+    max-width: 980px; margin: 30px auto; padding: 0 20px;
+  }
+  .diag-card {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    border-radius: 16px; padding: 30px; color: white; text-align: center;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--gold);
+    position: relative; overflow: hidden;
+  }
+  .diag-card::before {
+    content: ""; position: absolute;
+    top: -50%; right: -20%; width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(201,164,76,0.18), transparent 70%);
+    pointer-events: none;
+  }
+  .diag-card .eyebrow {
+    background: rgba(201,164,76,0.18); border-color: rgba(201,164,76,0.40);
+  }
+  .diag-card h2 {
+    font-size: clamp(22px, 4vw, 30px); margin: 10px 0 8px;
+    position: relative;
+  }
+  .diag-card h2 .gold { color: var(--gold); }
+  .diag-card p {
+    color: var(--cream); font-size: 15px; margin-bottom: 22px;
+    position: relative; max-width: 620px; margin-left: auto; margin-right: auto;
+  }
+  .diag-buttons {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    position: relative;
+  }
+  .btn-big {
+    padding: 18px 26px; font-size: 15px; min-width: 250px; justify-content: center;
+  }
+
+  /* ============== CONTACT ============== */
+  .contact {
+    max-width: 980px; margin: 30px auto; padding: 0 20px;
+  }
+  .contact-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .contact-item {
+    background: white; border: 1px solid var(--grey-light); border-radius: 12px;
+    padding: 18px; text-align: center; box-shadow: var(--shadow-sm);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-decoration: none; color: var(--ink); display: block;
+  }
+  .contact-item:hover {
+    transform: translateY(-2px); box-shadow: var(--shadow);
+    text-decoration: none;
+  }
+  .contact-item .ico {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--navy), var(--navy-2));
+    color: var(--gold);
+    display: grid; place-items: center; margin: 0 auto 10px;
+    font-size: 20px;
+  }
+  .contact-item b { color: var(--navy); font-size: 13px; display: block; margin-bottom: 4px; }
+  .contact-item span { font-size: 14px; color: var(--ink); font-weight: 600; }
+
+  /* ============== FOOTER ============== */
+  footer {
+    background: var(--navy-deep); color: var(--cream); padding: 30px 20px 24px;
+    border-top: 3px solid var(--gold); margin-top: 30px;
+  }
+  .footer-inner { max-width: 980px; margin: 0 auto; }
+  .footer-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  }
+  @media (max-width: 600px) { .footer-grid { grid-template-columns: 1fr; } }
+  footer h4 { color: var(--gold); font-size: 13px; letter-spacing: 1px; margin-bottom: 10px; }
+  footer p, footer a { color: var(--cream); font-size: 13px; line-height: 1.6; }
+  footer a { display: block; color: var(--gold-2); }
+  .legal {
+    border-top: 1px solid rgba(255,255,255,0.10);
+    margin-top: 20px; padding-top: 16px;
+    font-size: 11px; color: rgba(255,255,255,0.55); text-align: center;
+  }
+
+  /* ============== STICKY BOTTOM CTA (mobile) ============== */
+  .sticky-cta {
+    position: fixed; bottom: 16px; left: 16px; right: 16px;
+    z-index: 100; max-width: 460px; margin: 0 auto;
+    background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 60%, var(--gold-deep) 100%);
+    color: var(--navy); border-radius: 999px;
+    padding: 14px 22px; font-weight: 800; font-size: 14px;
+    text-align: center; box-shadow: 0 12px 30px rgba(7,20,45,0.35);
+    text-decoration: none;
+    border: 2px solid var(--gold-deep);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .sticky-cta:hover { text-decoration: none; filter: brightness(1.05); }
+  .sticky-cta svg { width: 18px; height: 18px; }
+
+  @media (min-width: 800px) {
+    .sticky-cta { display: none; }
+    body { padding-bottom: 30px; }
+  }
+
+  /* small helpers */
+  .center { text-align: center; }
+  .mt-12 { margin-top: 12px; }
+  .small { font-size: 12px; color: var(--grey); }
+</style>
+</head>
+<body>
+
+<!-- ============== TOPBAR ============== -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">C</div>
+      <div class="brand-text">
+        <b>CARMO ADVOCACIA</b><br>
+        <span>Direito do Servidor Público</span>
+      </div>
+    </div>
+    <div class="topbar-oab">
+      <b>Dra. Raquel Carmo</b><br>
+      OAB/RJ nº 189.033
+    </div>
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">DASHBOARD DO CLIENTE</span>
+    <h1>
+      Organize os documentos da sua ação de <span class="gold">licença-prêmio em pecúnia</span> e descubra quanto pode receber.
+    </h1>
+    <p>
+      O valor médio recuperado em ações individuais fica <b>entre R$ 80 mil e R$ 150 mil</b>.
+      A licença-prêmio que você não usufruiu antes de se aposentar deve ser <b>paga em dinheiro</b> —
+      é o que o STJ pacificou no Tema 635. Marque os documentos abaixo e fale comigo no WhatsApp.
+    </p>
+
+    <div class="progress-card">
+      <div class="progress-top">
+        <b>📊 Seu progresso de coleta</b>
+        <span class="counter"><b id="doneCount">0</b> de <b id="totalCount">17</b> documentos prontos</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-foot">
+        <span id="progressLabel">Comece marcando os documentos que você já tem em mãos.</span>
+        <span class="small" id="percentLabel">0%</span>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn btn-gold" id="ctaWhatsTop" href="#" target="_blank" rel="noopener">
+        💬 QUERO MINHA REUNIÃO DE DIAGNÓSTICO
+      </a>
+      <a class="btn btn-outline" href="#checklist">⬇ Ver checklist completo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FUNDAMENTO ============== -->
+<section class="fund">
+  <div class="fund-card">
+    <div class="fund-icon">⚖️</div>
+    <div>
+      <h3>É um direito seu, garantido pela Justiça</h3>
+      <p>
+        Servidor público com período aquisitivo cumprido tem direito à licença-prêmio.
+        Se ela não foi gozada antes da aposentadoria, vira <b>indenização em dinheiro</b>.
+      </p>
+      <div class="badges">
+        <span class="badge gold">STJ Tema 635</span>
+        <span class="badge">Lei 8.112/90 art. 87</span>
+        <span class="badge">Súmula 85 STJ</span>
+        <span class="badge gold">Prescreve em 5 anos</span>
+      </div>
+      <div class="zero-list">
+        <span class="zero-chip"><span class="x">✓</span> Sem audiências</span>
+        <span class="zero-chip"><span class="x">✓</span> Sem justificativa prévia</span>
+        <span class="zero-chip"><span class="x">✓</span> Sem pedido administrativo anterior</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CALCULATOR ============== -->
+<section class="calc" id="calc">
+  <div class="calc-card">
+    <span class="eyebrow">CALCULADORA EXPRESSA</span>
+    <h2>Quanto a sua <span class="gold">licença-prêmio</span> pode valer?</h2>
+    <p>Em 30 segundos, descubra uma estimativa do valor da sua ação — gratuito e sem cadastro.</p>
+
+    <div class="calc-form">
+      <div class="calc-field">
+        <label>Quantas licenças-prêmio você NÃO usufruiu?</label>
+        <div class="slider-row">
+          <div class="slider-wrap">
+            <input type="range" id="numLicencas" min="1" max="8" value="2" />
+          </div>
+          <div class="slider-value">
+            <span id="numLicencasValue">2</span>
+            <small>licenças</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-field">
+        <label>Duração de cada licença no seu órgão</label>
+        <select id="duracao">
+          <option value="3">3 meses (regra federal e maioria dos órgãos)</option>
+          <option value="6">6 meses (alguns estados/municípios)</option>
+        </select>
+      </div>
+
+      <div class="calc-field">
+        <label>Sua última remuneração bruta como servidor ativo</label>
+        <div class="input-wrap">
+          <span class="prefix">R$</span>
+          <input type="number" id="remuneracao" placeholder="Ex: 12000" min="0" inputmode="numeric" />
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-gold btn-calc" id="btnCalc">
+        📊 CALCULAR VALOR ESTIMADO
+      </button>
+    </div>
+
+    <div class="calc-result" id="calcResult" hidden>
+      <div class="calc-label">VALOR ESTIMADO DA SUA AÇÃO</div>
+      <div class="calc-amount" id="calcAmount">R$ 0,00</div>
+      <div class="calc-range">Com correção pela SELIC (estimativa): <b id="calcRangeHigh">R$ 0,00</b></div>
+      <div class="calc-tip" id="calcTip">📈 Dentro da média recuperada pelos clientes</div>
+      <div class="calc-disclaimer">
+        Estimativa preliminar baseada nos dados informados. O valor final depende da análise documental,
+        do regime jurídico aplicável (federal, estadual ou municipal) e dos atos administrativos do seu órgão.
+        Não constitui garantia de êxito nem promessa de resultado (Provimento 205/2021 CFOAB).
+      </div>
+      <a class="btn btn-gold calc-cta" id="ctaCalcWhats" href="#" target="_blank" rel="noopener">
+        💬 QUERO O CÁLCULO PRECISO COM A DRA. RAQUEL
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CHECKLIST ============== -->
+<section class="checklist" id="checklist">
+  <h2>📋 Checklist de Documentos</h2>
+  <p>Marque cada documento conforme for separando. O escritório ajuda você a obter os que faltam.</p>
+
+  <!-- BLOCO I -->
+  <div class="block open" data-block="1">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="num">I</div>
+      <div class="title">DOCUMENTOS PESSOAIS</div>
+      <div class="count"><span class="bc">0</span>/6</div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="block-body">
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">01.</span>RG e CPF (ou CNH com CPF)</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">02.</span>Comprovante de residência atualizado (últimos 90 dias)</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">03.</span>Comprovante de conta bancária (para receber o crédito)</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">04.</span>Procuração ao advogado (o escritório prepara)</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">05.</span>Contrato de honorários assinado (o escritório prepara)</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">06.</span>Declaração de hipossuficiência (se pedido de gratuidade)</span></label>
+    </div>
+  </div>
+
+  <!-- BLOCO II -->
+  <div class="block" data-block="2">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="num">II</div>
+      <div class="title">DOCUMENTAÇÃO FUNCIONAL</div>
+      <div class="count"><span class="bc">0</span>/2</div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="block-body">
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">07.</span>Portaria ou decreto de nomeação no cargo</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">08.</span>Certidão de tempo de serviço/contribuição</span></label>
+    </div>
+  </div>
+
+  <!-- BLOCO III -->
+  <div class="block" data-block="3">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="num">III</div>
+      <div class="title">LICENÇA-PRÊMIO (núcleo da ação)</div>
+      <div class="count"><span class="bc">0</span>/1</div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="block-body">
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">09.</span>Declaração do órgão sobre os quinquênios adquiridos</span></label>
+    </div>
+  </div>
+
+  <!-- BLOCO IV -->
+  <div class="block" data-block="4">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="num">IV</div>
+      <div class="title">REMUNERAÇÃO (base do cálculo)</div>
+      <div class="count"><span class="bc">0</span>/5</div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="block-body">
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">10.</span>Últimos 12 contracheques da ativa</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">11.</span>Demonstrativo da última remuneração integral como servidor ativo</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">12.</span>Tabela de vencimentos vigente do cargo</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">13.</span>Ficha financeira completa</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">14.</span>Comprovantes de gratificações, adicionais e vantagens</span></label>
+    </div>
+  </div>
+
+  <!-- BLOCO V -->
+  <div class="block" data-block="5">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="num">V</div>
+      <div class="title">APOSENTADORIA (se já aposentado)</div>
+      <div class="count"><span class="bc">0</span>/3</div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="block-body">
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">15.</span>Portaria ou ato concessivo da aposentadoria</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">16.</span>Publicação no DOU ou Diário Oficial</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">17.</span>Carta de concessão da aposentadoria</span></label>
+    </div>
+  </div>
+</section>
+
+<!-- ============== HELP CARD ============== -->
+<section class="help">
+  <div class="help-card">
+    <h3>🤝 Não tem todos os documentos? Tudo bem.</h3>
+    <p>
+      O escritório auxilia na obtenção de portarias, fichas funcionais, declarações
+      e tudo o mais junto ao órgão. Você não precisa estar com 100% pronto para começarmos.
+      <b>O importante é não deixar a prescrição correr.</b>
+    </p>
+    <a class="btn" id="ctaHelp" href="#" target="_blank" rel="noopener">
+      💬 Falar com a Dra. Raquel
+    </a>
+  </div>
+</section>
+
+<!-- ============== DIAGNOSTIC CTA ============== -->
+<section class="diagnostic" id="diag">
+  <div class="diag-card">
+    <span class="eyebrow">SEU PRÓXIMO PASSO</span>
+    <h2>Quero minha <span class="gold">reunião de diagnóstico</span></h2>
+    <p>
+      Em até <b>48 horas</b>, analisamos seu caso e devolvemos uma estimativa
+      do valor que você tem a receber. <b>Análise gratuita</b>, sem compromisso.
+      <br><br>
+      <b style="color:var(--gold)">Sem audiências. Sem justificativa prévia. Sem pedido administrativo.</b>
+      Você só precisa dos documentos — o resto fica conosco.
+    </p>
+    <div class="diag-buttons">
+      <a class="btn btn-gold btn-big" id="ctaWhats1" href="#" target="_blank" rel="noopener">
+        💬 WHATSAPP (21) 99848-8794
+      </a>
+      <a class="btn btn-gold btn-big" id="ctaWhats2" href="#" target="_blank" rel="noopener">
+        💬 WHATSAPP (21) 98221-1994
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CONTACT GRID ============== -->
+<section class="contact">
+  <div class="contact-grid">
+    <a class="contact-item" href="https://instagram.com/licencapremioja" target="_blank" rel="noopener">
+      <div class="ico">📷</div>
+      <b>INSTAGRAM</b>
+      <span>@licencapremioja</span>
+    </a>
+    <a class="contact-item" href="https://instagram.com/carmoadvocaciasa" target="_blank" rel="noopener">
+      <div class="ico">📷</div>
+      <b>INSTAGRAM</b>
+      <span>@carmoadvocaciasa</span>
+    </a>
+    <a class="contact-item" href="mailto:atendimento@carmoadvocacia.com.br?subject=Reuni%C3%A3o%20de%20diagn%C3%B3stico%20%E2%80%94%20Licen%C3%A7a-Pr%C3%AAmio">
+      <div class="ico">✉️</div>
+      <b>E-MAIL</b>
+      <span>atendimento@<br>carmoadvocacia.com.br</span>
+    </a>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <h4>CARMO SOCIEDADE DE ADVOCACIA</h4>
+        <p>
+          <b>Dra. Raquel Carmo</b><br>
+          OAB/RJ nº 189.033<br>
+          Direito do Servidor Público<br>
+          Licença-Prêmio | Aposentadoria | Pensão
+        </p>
+      </div>
+      <div>
+        <h4>ATENDIMENTO</h4>
+        <a href="https://wa.me/5521998488794" target="_blank">📱 WhatsApp (21) 99848-8794</a>
+        <a href="https://wa.me/5521982211994" target="_blank">📱 WhatsApp (21) 98221-1994</a>
+        <a href="mailto:atendimento@carmoadvocacia.com.br">✉ atendimento@carmoadvocacia.com.br</a>
+        <a href="https://instagram.com/licencapremioja" target="_blank">📷 @licencapremioja</a>
+        <a href="https://instagram.com/carmoadvocaciasa" target="_blank">📷 @carmoadvocaciasa</a>
+      </div>
+    </div>
+    <div class="legal">
+      Material informativo do Carmo Sociedade de Advocacia.
+      Não substitui análise individualizada do caso concreto.
+      Resultados variam conforme regime jurídico aplicável (federal, estadual ou municipal),
+      tempo de serviço e atos administrativos específicos.
+    </div>
+  </div>
+</footer>
+
+<!-- ============== STICKY MOBILE CTA ============== -->
+<a class="sticky-cta" id="ctaSticky" href="#" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm0 18.15c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31c-.82-1.31-1.26-2.83-1.26-4.39 0-4.54 3.7-8.24 8.24-8.24s8.24 3.7 8.24 8.24-3.69 8.25-8.23 8.25zm4.52-6.16c-.25-.12-1.47-.72-1.69-.8-.23-.08-.39-.12-.56.13-.16.25-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.77-1.84-.2-.49-.41-.42-.56-.43h-.48c-.16 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.16 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28z"/></svg>
+  QUERO MINHA REUNIÃO DE DIAGNÓSTICO
+</a>
+
+<script>
+  // ============== CONFIG ==============
+  const WHATS_PRIMARY = "5521998488794";
+  const WHATS_SECONDARY = "5521982211994";
+
+  function buildMsg() {
+    const done = parseInt(document.getElementById("doneCount").textContent || "0", 10);
+    const total = parseInt(document.getElementById("totalCount").textContent || "40", 10);
+    let txt;
+    if (done === 0) {
+      txt = "Olá, Dra. Raquel! Vi o dashboard da licença-prêmio em pecúnia e quero agendar minha reunião de diagnóstico gratuita.";
+    } else {
+      txt = `Olá, Dra. Raquel! Vi o dashboard da licença-prêmio em pecúnia e já reuni ${done} de ${total} documentos. Quero agendar minha reunião de diagnóstico gratuita.`;
+    }
+    return encodeURIComponent(txt);
+  }
+
+  function setWhatsLinks() {
+    const msg = buildMsg();
+    const url1 = `https://wa.me/${WHATS_PRIMARY}?text=${msg}`;
+    const url2 = `https://wa.me/${WHATS_SECONDARY}?text=${msg}`;
+    document.getElementById("ctaWhatsTop").href = url1;
+    document.getElementById("ctaWhats1").href = url1;
+    document.getElementById("ctaWhats2").href = url2;
+    document.getElementById("ctaSticky").href = url1;
+    document.getElementById("ctaHelp").href = url1;
+  }
+
+  // ============== TOGGLE BLOCK ==============
+  function toggleBlock(headEl) {
+    headEl.parentElement.classList.toggle("open");
+  }
+
+  // ============== PROGRESS ==============
+  function updateProgress() {
+    const all = document.querySelectorAll('.item input[type="checkbox"]');
+    const done = document.querySelectorAll('.item input[type="checkbox"]:checked').length;
+    const total = all.length;
+    const pct = Math.round((done / total) * 100);
+
+    document.getElementById("doneCount").textContent = done;
+    document.getElementById("totalCount").textContent = total;
+    document.getElementById("progressFill").style.width = pct + "%";
+    document.getElementById("percentLabel").textContent = pct + "%";
+
+    let label;
+    if (pct === 0) label = "Comece marcando os documentos que você já tem em mãos.";
+    else if (pct < 30) label = "Bom início! Continue separando os documentos.";
+    else if (pct < 60) label = "Você está no caminho — já dá para conversarmos.";
+    else if (pct < 100) label = "Excelente. Quase tudo pronto para iniciar a ação.";
+    else label = "✅ Tudo pronto! Bora marcar a reunião agora.";
+    document.getElementById("progressLabel").innerHTML = label;
+
+    document.querySelectorAll('.block').forEach(block => {
+      const items = block.querySelectorAll('.item input[type="checkbox"]');
+      const checked = block.querySelectorAll('.item input[type="checkbox"]:checked').length;
+      const bc = block.querySelector('.bc');
+      if (bc) bc.textContent = checked;
+    });
+
+    saveState();
+    setWhatsLinks();
+  }
+
+  // ============== PERSIST ==============
+  function saveState() {
+    const state = {};
+    document.querySelectorAll('.item input[type="checkbox"]').forEach((cb, i) => {
+      state[i] = cb.checked;
+    });
+    try { localStorage.setItem("lp_checklist_v1", JSON.stringify(state)); } catch(e){}
+  }
+  function loadState() {
+    try {
+      const raw = localStorage.getItem("lp_checklist_v1");
+      if (!raw) return;
+      const state = JSON.parse(raw);
+      document.querySelectorAll('.item input[type="checkbox"]').forEach((cb, i) => {
+        if (state[i]) cb.checked = true;
+      });
+    } catch(e){}
+  }
+
+  // ============== CALCULATOR ==============
+  const fmtBRL = (v) => new Intl.NumberFormat('pt-BR', {
+    style: 'currency', currency: 'BRL',
+    minimumFractionDigits: 0, maximumFractionDigits: 0
+  }).format(v);
+
+  function calcular() {
+    const n = parseInt(document.getElementById('numLicencas').value, 10) || 0;
+    const m = parseInt(document.getElementById('duracao').value, 10) || 3;
+    const remInput = document.getElementById('remuneracao');
+    const r = parseFloat(remInput.value) || 0;
+
+    if (r < 1000) {
+      remInput.focus();
+      remInput.style.borderColor = '#ff8a80';
+      setTimeout(() => { remInput.style.borderColor = ''; }, 2000);
+      return;
+    }
+
+    const base = n * m * r;
+    const comCorrecao = base * 1.20;
+
+    document.getElementById('calcAmount').textContent = fmtBRL(base);
+    document.getElementById('calcRangeHigh').textContent = fmtBRL(comCorrecao);
+
+    let tip = "";
+    if (base < 30000) tip = "💡 Valor abaixo da média — confirmar com análise documental";
+    else if (base <= 150000) tip = "📈 Dentro da média recuperada pelos clientes (R$ 80k–150k)";
+    else tip = "🏆 Valor acima da média — caso de alto potencial";
+    document.getElementById('calcTip').textContent = tip;
+
+    const result = document.getElementById('calcResult');
+    result.hidden = false;
+    setTimeout(() => result.scrollIntoView({behavior:'smooth', block:'center'}), 100);
+
+    const msg = `Olá, Dra. Raquel! Calculei minha licença-prêmio no dashboard: ${n} licença(s) não usufruída(s) × ${m} meses × ${fmtBRL(r)}/mês = estimativa de ${fmtBRL(base)}. Quero o cálculo preciso e agendar a reunião de diagnóstico gratuita.`;
+    document.getElementById('ctaCalcWhats').href = `https://wa.me/${WHATS_PRIMARY}?text=${encodeURIComponent(msg)}`;
+  }
+
+  function initCalc() {
+    const slider = document.getElementById('numLicencas');
+    const display = document.getElementById('numLicencasValue');
+    if (slider && display) {
+      slider.addEventListener('input', e => { display.textContent = e.target.value; });
+    }
+    const btn = document.getElementById('btnCalc');
+    if (btn) btn.addEventListener('click', calcular);
+  }
+
+  // ============== INIT ==============
+  document.addEventListener("DOMContentLoaded", () => {
+    loadState();
+    document.querySelectorAll('.item input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener("change", updateProgress);
+    });
+    updateProgress();
+    setWhatsLinks();
+    initCalc();
+  });
+</script>
+
+</body>
+</html>
