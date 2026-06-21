@@ -392,6 +392,110 @@
   .sum-cell .sum-value.gold { color: var(--gold-deep); }
   .sum-cell .sum-extra { font-size: 12px; color: var(--grey); }
 
+  /* ============== LEAD FORM (LGPD) ============== */
+  .lead-form {
+    background: var(--paper); border-radius: 12px;
+    padding: 18px 16px; margin-top: 4px; margin-bottom: 18px;
+    border: 1px dashed var(--grey-light);
+  }
+  .lead-form h4 {
+    color: var(--navy); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.8px; margin-bottom: 12px;
+  }
+  .lead-form h4 small {
+    text-transform: none; letter-spacing: 0; font-weight: 500;
+    color: var(--grey); font-size: 11px; margin-left: 6px;
+  }
+  .lgpd-check {
+    display: flex; gap: 10px; align-items: flex-start; cursor: pointer;
+    margin-top: 12px; padding: 12px 14px; border-radius: 8px;
+    background: rgba(11,30,63,0.04); transition: background 0.15s;
+  }
+  .lgpd-check:hover { background: rgba(11,30,63,0.07); }
+  .lgpd-check input {
+    appearance: none; -webkit-appearance: none;
+    width: 22px; height: 22px; min-width: 22px;
+    border-radius: 5px; border: 2px solid var(--navy);
+    background: white; cursor: pointer; position: relative;
+    margin-top: 1px; transition: all 0.15s;
+  }
+  .lgpd-check input:checked {
+    background: var(--ok); border-color: var(--ok);
+  }
+  .lgpd-check input:checked::after {
+    content: ""; position: absolute; left: 5px; top: 1px;
+    width: 6px; height: 12px;
+    border: solid white; border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+  }
+  .lgpd-check span {
+    font-size: 12px; line-height: 1.5; color: var(--ink);
+  }
+  .lgpd-check a {
+    color: var(--gold-deep); text-decoration: underline;
+  }
+
+  .btn[disabled] {
+    opacity: 0.45; cursor: not-allowed; filter: grayscale(0.30);
+    pointer-events: none;
+  }
+  .btn .spinner {
+    display: inline-block; width: 14px; height: 14px;
+    border: 2px solid currentColor; border-top-color: transparent;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+    margin-right: 8px; vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Privacy modal */
+  .privacy-overlay {
+    position: fixed; inset: 0; background: rgba(7,20,45,0.65);
+    z-index: 200; display: none;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadein 0.2s ease;
+  }
+  .privacy-overlay.show { display: flex; }
+  .privacy-modal {
+    background: white; border-radius: 16px; padding: 26px 24px;
+    max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.40);
+    border-top: 4px solid var(--gold);
+  }
+  .privacy-modal h3 {
+    color: var(--navy); font-size: 20px; margin-bottom: 14px;
+  }
+  .privacy-modal h4 {
+    color: var(--navy); font-size: 14px; margin: 14px 0 6px;
+  }
+  .privacy-modal p, .privacy-modal li {
+    color: var(--ink); font-size: 13px; line-height: 1.6; margin-bottom: 8px;
+  }
+  .privacy-modal ul { padding-left: 20px; }
+  .privacy-modal .close {
+    width: 100%; margin-top: 20px;
+    background: var(--navy); color: white;
+    padding: 12px; border-radius: 8px; border: none;
+    font-weight: 700; cursor: pointer; font-size: 14px;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; left: 50%; bottom: 100px;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--navy); color: white;
+    padding: 14px 20px; border-radius: 10px;
+    box-shadow: var(--shadow);
+    font-size: 14px; font-weight: 600;
+    z-index: 300; opacity: 0;
+    transition: all 0.25s ease;
+    max-width: 90%; text-align: center;
+    border-left: 4px solid var(--gold);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.ok { border-left-color: var(--ok); }
+  .toast.err { border-left-color: #d32f2f; }
+
   /* ============== CALCULATOR ============== */
   .calc { max-width: 980px; margin: 30px auto; padding: 0 20px; }
   .calc-card {
@@ -1004,9 +1108,30 @@
       </div>
     </div>
 
-    <a class="btn btn-gold calc-cta" id="ctaSummary" href="#" target="_blank" rel="noopener" style="margin: 0 auto; display: flex;">
+    <div class="lead-form">
+      <h4>Para o atendimento <small>(opcional — mas ajuda a Dra. Raquel a te chamar mais rápido)</small></h4>
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label" for="leadNome">Seu nome</label>
+          <input type="text" class="field-input" id="leadNome" placeholder="Como podemos te chamar?" autocomplete="name" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="leadWhatsapp">WhatsApp (com DDD)</label>
+          <input type="tel" class="field-input" id="leadWhatsapp" placeholder="(21) 90000-0000" autocomplete="tel" />
+        </div>
+      </div>
+      <label class="lgpd-check" for="leadLGPD">
+        <input type="checkbox" id="leadLGPD" />
+        <span>Autorizo o tratamento dos meus dados para análise jurídica preliminar do meu caso, nos termos da LGPD (Lei nº 13.709/18). <a href="#" onclick="openPrivacy(event)">Saiba mais</a>.</span>
+      </label>
+    </div>
+
+    <button type="button" class="btn btn-gold calc-cta" id="ctaSummary" disabled style="margin: 0 auto; display: flex;">
       💬 LEVAR MEU RESUMO PARA A DRA. RAQUEL
-    </a>
+    </button>
+    <div class="field-hint" id="ctaSummaryHint" style="text-align:center; margin-top:8px">
+      ⓘ Marque o consentimento acima para enviar.
+    </div>
   </div>
 </section>
 
@@ -1160,6 +1285,46 @@
     </div>
   </div>
 </footer>
+
+<!-- ============== PRIVACY MODAL ============== -->
+<div class="privacy-overlay" id="privacyOverlay" onclick="if(event.target===this)closePrivacy()">
+  <div class="privacy-modal">
+    <h3>🔒 Política de Privacidade — Tratamento de Dados</h3>
+    <p><b>Responsável pelo tratamento:</b> Carmo Sociedade de Advocacia (CNPJ a confirmar), representado pela Dra. Raquel Alex do Carmo (OAB/RJ nº 189.033).</p>
+
+    <h4>Quais dados coletamos</h4>
+    <ul>
+      <li>Dados identificativos (nome, WhatsApp), quando você informa</li>
+      <li>Dados previdenciários e funcionais informados por você no formulário (mês/ano de aposentadoria, licenças não usufruídas, remuneração, situação de requerimento administrativo)</li>
+      <li>Documentos marcados no checklist</li>
+      <li>Cálculos gerados pela calculadora</li>
+    </ul>
+
+    <h4>Para que usamos</h4>
+    <ul>
+      <li>Realizar análise jurídica preliminar do seu caso de licença-prêmio em pecúnia</li>
+      <li>Entrar em contato com você para agendar a reunião de diagnóstico gratuita</li>
+      <li>Estimar a viabilidade e o valor potencial da sua ação</li>
+    </ul>
+
+    <h4>Base legal</h4>
+    <p>Consentimento (art. 7º, I) e execução de medidas preliminares ao contrato (art. 7º, V) da Lei 13.709/18.</p>
+
+    <h4>Compartilhamento</h4>
+    <p>Seus dados <b>não são vendidos nem compartilhados com terceiros</b> para fins comerciais. Podem ser processados por ferramentas técnicas confiáveis (servidor de e-mail) exclusivamente para o atendimento.</p>
+
+    <h4>Seus direitos (art. 18 LGPD)</h4>
+    <p>Você pode a qualquer tempo solicitar — pelo e-mail <a href="mailto:leadscarmoadv@gmail.com">leadscarmoadv@gmail.com</a> — confirmação, acesso, correção, anonimização, portabilidade ou eliminação dos seus dados.</p>
+
+    <h4>Retenção</h4>
+    <p>Mantemos os dados pelo prazo necessário ao atendimento e ao cumprimento das obrigações legais aplicáveis (regulamentação OAB e prazo prescricional civil).</p>
+
+    <button type="button" class="close" onclick="closePrivacy()">Entendi e fechar</button>
+  </div>
+</div>
+
+<!-- ============== TOAST ============== -->
+<div class="toast" id="toast"></div>
 
 <!-- ============== STICKY MOBILE CTA ============== -->
 <a class="sticky-cta" id="ctaSticky" href="#" target="_blank" rel="noopener">
@@ -1584,7 +1749,146 @@
     parts.push(`${done}/${total} docs`);
 
     const msg = `Olá, Dra. Raquel! Vi o dashboard e gostaria de levar meu resumo: ${parts.join(' · ')}. Quero agendar a reunião de diagnóstico gratuita.`;
-    document.getElementById('ctaSummary').href = `https://wa.me/${WHATS_PRIMARY}?text=${encodeURIComponent(msg)}`;
+    summaryState.waUrl = `https://wa.me/${WHATS_PRIMARY}?text=${encodeURIComponent(msg)}`;
+    summaryState.resumoTxt = parts.join(' · ');
+  }
+
+  // ============== LEAD CAPTURE (Formspree + LGPD) ==============
+  const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mrewzwzw';
+  const summaryState = { waUrl: '', resumoTxt: '' };
+
+  function openPrivacy(e) {
+    if (e) e.preventDefault();
+    document.getElementById('privacyOverlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePrivacy() {
+    document.getElementById('privacyOverlay').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  window.openPrivacy = openPrivacy;
+  window.closePrivacy = closePrivacy;
+
+  function showToast(text, kind) {
+    const t = document.getElementById('toast');
+    t.textContent = text;
+    t.className = 'toast show ' + (kind || '');
+    setTimeout(() => { t.classList.remove('show'); }, 3800);
+  }
+
+  function buildLeadPayload() {
+    const a = analysisState;
+    const c = calcState;
+    const all = document.querySelectorAll('.item input[type="checkbox"]');
+    const done = document.querySelectorAll('.item input[type="checkbox"]:checked').length;
+    const total = all.length;
+    const docNames = Array.from(document.querySelectorAll('.item input[type="checkbox"]:checked'))
+      .map(cb => cb.closest('.item').querySelector('.item-label').textContent.trim().replace(/^\d+\.\s*/, ''))
+      .join(' | ') || '—';
+
+    const situacaoMap = { deferido: 'Deferido', indeferido: 'Indeferido', sem_resposta: 'Sem resposta' };
+    const statusMap = {
+      no_prazo: 'Dentro do prazo',
+      proximo: 'Próximo da prescrição',
+      prescrito: 'Possível prescrição',
+      suspenso: 'Prazo suspenso (pendente resposta)'
+    };
+
+    return {
+      _subject: '[Dashboard LP] Novo lead — Licença-Prêmio em Pecúnia',
+      nome: document.getElementById('leadNome').value.trim() || '(não informado)',
+      whatsapp_lead: document.getElementById('leadWhatsapp').value.trim() || '(não informado)',
+      aposentadoria: a.dataAposentadoria ? fmtDateBR(a.dataAposentadoria) : '(não informado)',
+      usou_para_complemento: a.usouComplemento === 'sim' ? 'SIM (atenção: pode impedir conversão)' : (a.usouComplemento === 'nao' ? 'Não' : '(não respondeu)'),
+      houve_requerimento_adm: a.houveReq === 'sim' ? 'Sim' : 'Não',
+      situacao_requerimento: situacaoMap[a.situacaoReq] || '—',
+      data_protocolo: a.dataProtocolo ? fmtDateBR(a.dataProtocolo) : '—',
+      num_processo_adm: a.numProcesso || '—',
+      data_resposta: a.dataResposta ? fmtDateBR(a.dataResposta) : '—',
+      prescricao_marco_inicial: a.presc.start ? fmtDateBR(a.presc.start) : '—',
+      prescricao_limite: a.presc.end ? fmtDateBR(a.presc.end) : (a.presc.status === 'suspenso' ? 'Suspenso' : '—'),
+      prescricao_status: statusMap[a.presc.status] || '—',
+      licencas_nao_usufruidas: document.getElementById('numLicencas').value,
+      duracao_licenca_meses: document.getElementById('duracao').value,
+      remuneracao_informada: document.getElementById('remuneracao').value
+        ? fmtBRL(parseFloat(document.getElementById('remuneracao').value))
+        : '—',
+      valor_estimado_base: c.hasResult ? fmtBRL(c.base) : '(calculadora não usada)',
+      valor_com_selic: c.hasResult ? fmtBRL(c.comCorrecao) : '—',
+      documentos_marcados: `${done}/${total}`,
+      documentos_lista: docNames,
+      resumo_curto: summaryState.resumoTxt || '—',
+      origem: 'Dashboard Licença-Prêmio',
+      url_origem: window.location.href
+    };
+  }
+
+  async function handleSummaryCTA() {
+    const lgpd = document.getElementById('leadLGPD');
+    if (!lgpd.checked) {
+      showToast('Marque o consentimento LGPD para enviar.', 'err');
+      return;
+    }
+
+    const btn = document.getElementById('ctaSummary');
+    const originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Enviando seu resumo…';
+
+    const payload = buildLeadPayload();
+
+    try {
+      const resp = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (resp.ok) {
+        showToast('✓ Resumo enviado! Abrindo WhatsApp…', 'ok');
+        setTimeout(() => {
+          window.open(summaryState.waUrl || `https://wa.me/${WHATS_PRIMARY}`, '_blank');
+          btn.innerHTML = '✓ ENVIADO — Falar no WhatsApp';
+          btn.disabled = false;
+        }, 800);
+      } else {
+        throw new Error('Formspree HTTP ' + resp.status);
+      }
+    } catch (err) {
+      console.error('Lead submit error:', err);
+      showToast('Não conseguimos enviar agora. Abrindo o WhatsApp para você falar direto.', 'err');
+      setTimeout(() => {
+        window.open(summaryState.waUrl || `https://wa.me/${WHATS_PRIMARY}`, '_blank');
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+      }, 1500);
+    }
+  }
+
+  function initLeadCapture() {
+    const lgpd = document.getElementById('leadLGPD');
+    const btn = document.getElementById('ctaSummary');
+    const hint = document.getElementById('ctaSummaryHint');
+    const update = () => {
+      if (lgpd.checked) {
+        btn.disabled = false;
+        hint.textContent = 'Pronto! Ao clicar, enviamos seu resumo e abrimos o WhatsApp.';
+      } else {
+        btn.disabled = true;
+        hint.textContent = 'ⓘ Marque o consentimento acima para enviar.';
+      }
+    };
+    lgpd.addEventListener('change', update);
+    btn.addEventListener('click', handleSummaryCTA);
+    update();
+
+    // ESC fecha modal
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closePrivacy();
+    });
   }
 
   function refreshAnalysisAndSummary() {
@@ -1616,6 +1920,7 @@
     setWhatsLinks();
     initCalc();
     initAnalysis();
+    initLeadCapture();
   });
 </script>
 
