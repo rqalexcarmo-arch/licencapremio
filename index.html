@@ -1764,9 +1764,8 @@
     summaryState.resumoTxt = parts.join(' · ');
   }
 
-  // ============== LEAD CAPTURE (Formspree + Google Sheets + LGPD) ==============
+  // ============== LEAD CAPTURE (Formspree + LGPD) ==============
   const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mrewzwzw';
-  const SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz4_ZKBAB8QkY6rA5_8a26Qm6VGU-cAZn3zQsxMhUjAQat8Z8f2c4cChtFGrMqkjYe-/exec';
   const summaryState = { waUrl: '', resumoTxt: '' };
 
   function openPrivacy(e) {
@@ -1865,36 +1864,15 @@
     btn.innerHTML = '<span class="spinner"></span>Enviando seu resumo…';
 
     const payload = buildLeadPayload();
-    const payloadStr = JSON.stringify(payload);
-
-    // Disparo redundante: Formspree (e-mail) + Google Sheets (planilha/CRM)
-    const tasks = [
-      fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: payloadStr
-      }).then(r => ({ source: 'formspree', ok: r.ok, status: r.status }))
-        .catch(e => ({ source: 'formspree', ok: false, error: String(e) })),
-
-      fetch(SHEETS_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: payloadStr,
-        redirect: 'follow'
-      }).then(r => ({ source: 'sheets', ok: r.ok, status: r.status }))
-        .catch(e => ({ source: 'sheets', ok: false, error: String(e) }))
-    ];
 
     try {
-      const results = await Promise.allSettled(tasks);
-      const fulfilled = results
-        .filter(r => r.status === 'fulfilled')
-        .map(r => r.value);
-      const successes = fulfilled.filter(v => v.ok).length;
+      const resp = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-      console.log('Lead submit results:', fulfilled);
-
-      if (successes > 0) {
+      if (resp.ok) {
         showToast('✓ Resumo enviado! Abrindo WhatsApp…', 'ok');
         setTimeout(() => {
           window.open(summaryState.waUrl || `https://wa.me/${WHATS_PRIMARY}`, '_blank');
@@ -1902,7 +1880,7 @@
           btn.disabled = false;
         }, 800);
       } else {
-        throw new Error('Todos os canais falharam');
+        throw new Error('Formspree HTTP ' + resp.status);
       }
     } catch (err) {
       console.error('Lead submit error:', err);
