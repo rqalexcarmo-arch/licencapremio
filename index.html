@@ -1120,6 +1120,14 @@
           <input type="tel" class="field-input" id="leadWhatsapp" placeholder="(21) 90000-0000" autocomplete="tel" />
         </div>
       </div>
+      <div class="form-row full">
+        <div class="field">
+          <label class="field-label" for="leadEmail">E-mail para envio de documentos</label>
+          <input type="email" class="field-input" id="leadEmail" placeholder="seu.email@exemplo.com" autocomplete="email" />
+          <div class="field-error" id="leadEmailErr">Informe um e-mail válido (ou deixe em branco).</div>
+          <div class="field-hint">Usamos para enviar contrato, procuração e atualizações do seu caso.</div>
+        </div>
+      </div>
       <label class="lgpd-check" for="leadLGPD">
         <input type="checkbox" id="leadLGPD" />
         <span>Autorizo o tratamento dos meus dados para análise jurídica preliminar do meu caso, nos termos da LGPD (Lei nº 13.709/18). <a href="#" onclick="openPrivacy(event)">Saiba mais</a>.</span>
@@ -1753,8 +1761,9 @@
     summaryState.resumoTxt = parts.join(' · ');
   }
 
-  // ============== LEAD CAPTURE (Formspree + LGPD) ==============
+  // ============== LEAD CAPTURE (Formspree + Google Sheets + LGPD) ==============
   const FORMSPREE_ENDPOINT = 'https://formspree.io/f/mrewzwzw';
+  const SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz4_ZKBAB8QkY6rA5_8a26Qm6VGU-cAZn3zQsxMhUjAQat8Z8f2c4cChtFGrMqkjYe-/exec';
   const summaryState = { waUrl: '', resumoTxt: '' };
 
   function openPrivacy(e) {
@@ -1798,6 +1807,7 @@
       _subject: '[Dashboard LP] Novo lead — Licença-Prêmio em Pecúnia',
       nome: document.getElementById('leadNome').value.trim() || '(não informado)',
       whatsapp_lead: document.getElementById('leadWhatsapp').value.trim() || '(não informado)',
+      email_lead: document.getElementById('leadEmail').value.trim() || '(não informado)',
       aposentadoria: a.dataAposentadoria ? fmtDateBR(a.dataAposentadoria) : '(não informado)',
       usou_para_complemento: a.usouComplemento === 'sim' ? 'SIM (atenção: pode impedir conversão)' : (a.usouComplemento === 'nao' ? 'Não' : '(não respondeu)'),
       houve_requerimento_adm: a.houveReq === 'sim' ? 'Sim' : 'Não',
@@ -1823,6 +1833,10 @@
     };
   }
 
+  function isValidEmail(s) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(s);
+  }
+
   async function handleSummaryCTA() {
     const lgpd = document.getElementById('leadLGPD');
     if (!lgpd.checked) {
@@ -1830,24 +1844,54 @@
       return;
     }
 
+    const emailEl = document.getElementById('leadEmail');
+    const emailErr = document.getElementById('leadEmailErr');
+    if (emailEl.value.trim() && !isValidEmail(emailEl.value.trim())) {
+      emailEl.classList.add('invalid');
+      emailErr.classList.add('show');
+      showToast('E-mail inválido — corrija ou deixe em branco.', 'err');
+      emailEl.focus();
+      return;
+    }
+    emailEl.classList.remove('invalid');
+    emailErr.classList.remove('show');
+
     const btn = document.getElementById('ctaSummary');
     const originalHTML = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Enviando seu resumo…';
 
     const payload = buildLeadPayload();
+    const payloadStr = JSON.stringify(payload);
+
+    // Disparo redundante: Formspree (e-mail) + Google Sheets (planilha/CRM)
+    const tasks = [
+      fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: payloadStr
+      }).then(r => ({ source: 'formspree', ok: r.ok, status: r.status }))
+        .catch(e => ({ source: 'formspree', ok: false, error: String(e) })),
+
+      fetch(SHEETS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: payloadStr,
+        redirect: 'follow'
+      }).then(r => ({ source: 'sheets', ok: r.ok, status: r.status }))
+        .catch(e => ({ source: 'sheets', ok: false, error: String(e) }))
+    ];
 
     try {
-      const resp = await fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
+      const results = await Promise.allSettled(tasks);
+      const fulfilled = results
+        .filter(r => r.status === 'fulfilled')
+        .map(r => r.value);
+      const successes = fulfilled.filter(v => v.ok).length;
 
-      if (resp.ok) {
+      console.log('Lead submit results:', fulfilled);
+
+      if (successes > 0) {
         showToast('✓ Resumo enviado! Abrindo WhatsApp…', 'ok');
         setTimeout(() => {
           window.open(summaryState.waUrl || `https://wa.me/${WHATS_PRIMARY}`, '_blank');
@@ -1855,7 +1899,7 @@
           btn.disabled = false;
         }, 800);
       } else {
-        throw new Error('Formspree HTTP ' + resp.status);
+        throw new Error('Todos os canais falharam');
       }
     } catch (err) {
       console.error('Lead submit error:', err);
