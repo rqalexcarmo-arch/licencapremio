@@ -187,6 +187,211 @@
     background: var(--ok); color: white; font-size: 11px; font-weight: 800;
   }
 
+  /* ============== ANALYSIS (Quadro de Análise) ============== */
+  .analysis { max-width: 980px; margin: 30px auto; padding: 0 20px; }
+  .analysis-card {
+    background: white; border-radius: 16px; padding: 26px 22px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--grey-light);
+    position: relative;
+  }
+  .analysis-card h2 {
+    color: var(--navy); font-size: clamp(20px, 3.5vw, 26px);
+    margin: 8px 0 6px; line-height: 1.2;
+  }
+  .analysis-card h2 .gold { color: var(--gold-deep); }
+  .analysis-card > p { color: var(--grey); font-size: 14px; margin-bottom: 20px; }
+  .analysis-eyebrow {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--navy); background: rgba(11,30,63,0.06);
+    padding: 6px 12px; border-radius: 999px;
+    border: 1px solid rgba(11,30,63,0.10);
+  }
+
+  .form-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+  .form-row.full { grid-template-columns: 1fr; }
+  .form-row.three { grid-template-columns: 1fr 1fr 1fr; }
+  @media (max-width: 600px) { .form-row.three { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-label {
+    font-size: 12px; font-weight: 700; color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.4px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .field-input, .field-select {
+    width: 100%; padding: 12px 14px; font-size: 15px;
+    background: white; color: var(--ink);
+    border: 1px solid var(--grey-light); border-radius: 8px;
+    font-family: inherit; -webkit-appearance: none; appearance: none;
+    transition: border-color 0.15s ease;
+  }
+  .field-input:focus, .field-select:focus {
+    outline: none; border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,164,76,0.15);
+  }
+  .field-input.invalid {
+    border-color: #d32f2f;
+    background: #fff5f5;
+  }
+  .field-hint {
+    font-size: 11px; color: var(--grey); margin-top: 2px; line-height: 1.4;
+  }
+  .field-error {
+    font-size: 11px; color: #d32f2f; font-weight: 600; margin-top: 2px;
+    display: none;
+  }
+  .field-error.show { display: block; }
+
+  /* Tooltip ⓘ */
+  .tip {
+    display: inline-grid; place-items: center;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--navy); color: white;
+    font-size: 10px; font-weight: 800; cursor: help;
+    position: relative;
+    font-style: normal;
+  }
+  .tip::after {
+    content: attr(data-tip);
+    position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%);
+    background: var(--navy-deep); color: white;
+    padding: 8px 12px; border-radius: 8px;
+    font-size: 11px; font-weight: 500; line-height: 1.4;
+    width: max-content; max-width: 240px;
+    text-align: left; white-space: normal;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.20);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 80;
+  }
+  .tip::before {
+    content: ""; position: absolute; bottom: calc(100% + 2px); left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent; border-top-color: var(--navy-deep);
+    opacity: 0; transition: opacity 0.15s ease;
+    z-index: 80;
+  }
+  .tip:hover::after, .tip:focus::after,
+  .tip:hover::before, .tip:focus::before { opacity: 1; }
+
+  /* Yes/No segmented control */
+  .seg {
+    display: inline-grid; grid-auto-flow: column;
+    background: var(--grey-light); padding: 4px; border-radius: 10px;
+    gap: 4px;
+  }
+  .seg input { display: none; }
+  .seg label {
+    padding: 10px 18px; cursor: pointer; border-radius: 8px;
+    font-size: 13px; font-weight: 700; color: var(--grey);
+    transition: all 0.15s ease;
+    text-align: center; min-width: 80px;
+  }
+  .seg input:checked + label {
+    background: var(--navy); color: white;
+    box-shadow: 0 2px 6px rgba(11,30,63,0.20);
+  }
+  .seg input:checked + label.yes { background: var(--ok); }
+  .seg input:checked + label.no { background: var(--navy); }
+
+  /* Conditional block */
+  .conditional {
+    background: rgba(11,30,63,0.04);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    padding: 16px 16px 4px;
+    margin: 10px 0 16px;
+    display: none;
+    animation: fadein 0.3s ease;
+  }
+  .conditional.show { display: block; }
+  .conditional h4 {
+    color: var(--navy); font-size: 13px; margin-bottom: 12px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  /* Prescription panel */
+  .presc-panel {
+    margin-top: 18px; padding: 16px 18px;
+    background: rgba(11,30,63,0.04); border-radius: 12px;
+    border: 1px solid var(--grey-light);
+    display: none;
+  }
+  .presc-panel.show { display: block; }
+  .presc-panel h4 {
+    color: var(--navy); font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.8px; margin-bottom: 10px;
+  }
+  .presc-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+  }
+  .presc-cell { background: white; border-radius: 8px; padding: 12px 14px; border: 1px solid var(--grey-light); }
+  .presc-cell .lbl {
+    font-size: 10px; color: var(--grey); text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 4px;
+  }
+  .presc-cell .val {
+    font-size: 14px; font-weight: 700; color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .presc-status { margin-top: 12px; }
+
+  /* Status pills */
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 700;
+    border: 1px solid transparent;
+  }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .pill.ok { background: rgba(46,125,50,0.10); color: var(--ok); border-color: rgba(46,125,50,0.30); }
+  .pill.warn { background: rgba(245,124,0,0.10); color: #E65100; border-color: rgba(230,81,0,0.30); }
+  .pill.bad { background: rgba(211,47,47,0.10); color: #C62828; border-color: rgba(198,40,40,0.30); }
+  .pill.info { background: rgba(11,30,63,0.08); color: var(--navy); border-color: rgba(11,30,63,0.20); }
+
+  /* ============== SUMMARY ============== */
+  .summary { max-width: 980px; margin: 30px auto; padding: 0 20px; }
+  .summary-card {
+    background: white; border-radius: 16px; padding: 26px 22px;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--gold);
+    position: relative;
+  }
+  .summary-card h2 {
+    color: var(--navy); font-size: clamp(20px, 3.5vw, 26px);
+    margin: 8px 0 6px; line-height: 1.2;
+  }
+  .summary-card h2 .gold { color: var(--gold-deep); }
+  .summary-card > p { color: var(--grey); font-size: 14px; margin-bottom: 20px; }
+
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px; margin-bottom: 20px;
+  }
+  .sum-cell {
+    background: linear-gradient(180deg, var(--paper) 0%, white 100%);
+    border-radius: 12px; padding: 16px; border: 1px solid var(--grey-light);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .sum-cell .sum-label {
+    font-size: 11px; font-weight: 700; color: var(--grey);
+    text-transform: uppercase; letter-spacing: 0.8px;
+  }
+  .sum-cell .sum-value {
+    font-size: 18px; font-weight: 800; color: var(--navy);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+  }
+  .sum-cell .sum-value.gold { color: var(--gold-deep); }
+  .sum-cell .sum-extra { font-size: 12px; color: var(--grey); }
+
   /* ============== CALCULATOR ============== */
   .calc { max-width: 980px; margin: 30px auto; padding: 0 20px; }
   .calc-card {
@@ -285,8 +490,11 @@
     letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 700;
   }
   .calc-amount {
-    font-size: clamp(28px, 6vw, 40px); font-weight: 800; color: var(--gold);
-    margin-bottom: 4px; line-height: 1.1;
+    font-size: clamp(26px, 5.5vw, 38px); font-weight: 800; color: var(--gold);
+    margin-bottom: 4px; line-height: 1.15;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.5px;
   }
   .calc-range {
     color: var(--cream); font-size: 13px; margin-bottom: 14px;
@@ -541,7 +749,7 @@
     <div class="progress-card">
       <div class="progress-top">
         <b>📊 Seu progresso de coleta</b>
-        <span class="counter"><b id="doneCount">0</b> de <b id="totalCount">17</b> documentos prontos</span>
+        <span class="counter"><b id="doneCount">0</b> de <b id="totalCount">7</b> documentos prontos</span>
       </div>
       <div class="progress-bar">
         <div class="progress-fill" id="progressFill"></div>
@@ -582,6 +790,124 @@
         <span class="zero-chip"><span class="x">✓</span> Sem justificativa prévia</span>
         <span class="zero-chip"><span class="x">✓</span> Sem pedido administrativo anterior</span>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ANALYSIS (Quadro de Análise) ============== -->
+<section class="analysis" id="analise">
+  <div class="analysis-card">
+    <span class="analysis-eyebrow">QUADRO DE ANÁLISE INICIAL</span>
+    <h2>Sua situação previdenciária e a <span class="gold">prescrição</span></h2>
+    <p>Em 1 minuto, descobrimos se o seu caso ainda está no prazo de 5 anos e se você atende aos requisitos.</p>
+
+    <h4 class="field-label" style="font-size:13px; margin-bottom:10px; color:var(--gold-deep)">DADOS PREVIDENCIÁRIOS</h4>
+    <div class="form-row">
+      <div class="field">
+        <label class="field-label" for="mesApos">
+          Mês da aposentadoria
+          <i class="tip" tabindex="0" data-tip="Mês em que sua aposentadoria foi efetivamente publicada no Diário Oficial.">i</i>
+        </label>
+        <select class="field-select" id="mesApos">
+          <option value="">Selecione…</option>
+          <option value="1">Janeiro</option><option value="2">Fevereiro</option>
+          <option value="3">Março</option><option value="4">Abril</option>
+          <option value="5">Maio</option><option value="6">Junho</option>
+          <option value="7">Julho</option><option value="8">Agosto</option>
+          <option value="9">Setembro</option><option value="10">Outubro</option>
+          <option value="11">Novembro</option><option value="12">Dezembro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" for="anoApos">
+          Ano da aposentadoria
+          <i class="tip" tabindex="0" data-tip="Ano da publicação da sua aposentadoria. A prescrição corre a partir desse marco.">i</i>
+        </label>
+        <input type="number" class="field-input" id="anoApos" min="1980" max="2100" placeholder="Ex: 2022" inputmode="numeric" />
+        <div class="field-error" id="anoAposErr">Informe um ano válido (entre 1980 e o ano atual).</div>
+      </div>
+    </div>
+
+    <div class="form-row full">
+      <div class="field">
+        <label class="field-label">
+          Utilizou a Licença-Prêmio para complementação de tempo de serviço necessário à aposentadoria?
+          <i class="tip" tabindex="0" data-tip="Servidor que averbou a licença-prêmio para completar tempo de aposentadoria não tem direito a converter o mesmo período em pecúnia (vedação ao bis in idem).">i</i>
+        </label>
+        <div class="seg" role="radiogroup">
+          <input type="radio" name="usouComplemento" id="usouComplementoNao" value="nao" />
+          <label for="usouComplementoNao" class="no">Não</label>
+          <input type="radio" name="usouComplemento" id="usouComplementoSim" value="sim" />
+          <label for="usouComplementoSim" class="yes">Sim</label>
+        </div>
+        <div class="field-hint" id="usouComplementoHint"></div>
+      </div>
+    </div>
+
+    <div class="form-row full">
+      <div class="field">
+        <label class="field-label">
+          Houve requerimento administrativo da Licença-Prêmio?
+          <i class="tip" tabindex="0" data-tip="Pedido formal protocolado ao seu órgão solicitando a conversão da licença-prêmio em dinheiro. Não é obrigatório, mas altera o marco da prescrição.">i</i>
+        </label>
+        <div class="seg" role="radiogroup">
+          <input type="radio" name="houveReq" id="houveReqNao" value="nao" checked />
+          <label for="houveReqNao" class="no">Não</label>
+          <input type="radio" name="houveReq" id="houveReqSim" value="sim" />
+          <label for="houveReqSim" class="yes">Sim</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="conditional" id="reqDetails">
+      <h4>Dados do requerimento administrativo</h4>
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label" for="dataProtocolo">Data do protocolo</label>
+          <input type="date" class="field-input" id="dataProtocolo" />
+          <div class="field-error" id="dataProtocoloErr">Data inválida ou futura.</div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="numProcesso">Nº do processo administrativo</label>
+          <input type="text" class="field-input" id="numProcesso" placeholder="Ex: 00000.000000/0000-00" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label" for="situacaoReq">Situação</label>
+          <select class="field-select" id="situacaoReq">
+            <option value="">Selecione…</option>
+            <option value="deferido">Deferido</option>
+            <option value="indeferido">Indeferido</option>
+            <option value="sem_resposta">Sem resposta</option>
+          </select>
+        </div>
+        <div class="field" id="dataRespostaWrap">
+          <label class="field-label" for="dataResposta">Data da resposta administrativa</label>
+          <input type="date" class="field-input" id="dataResposta" />
+          <div class="field-error" id="dataRespostaErr">Data inválida ou futura.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="presc-panel" id="prescPanel">
+      <h4>📅 ANÁLISE DA PRESCRIÇÃO QUINQUENAL</h4>
+      <div class="presc-grid">
+        <div class="presc-cell">
+          <div class="lbl">Marco inicial</div>
+          <div class="val" id="prescStart">—</div>
+        </div>
+        <div class="presc-cell">
+          <div class="lbl">Limite da prescrição</div>
+          <div class="val" id="prescEnd">—</div>
+        </div>
+        <div class="presc-cell">
+          <div class="lbl">Tempo restante</div>
+          <div class="val" id="prescRemaining">—</div>
+        </div>
+      </div>
+      <div class="presc-status" id="prescStatus"></div>
+      <div class="field-hint" id="prescNote" style="margin-top:10px"></div>
     </div>
   </div>
 </section>
@@ -645,6 +971,42 @@
   </div>
 </section>
 
+<!-- ============== SUMMARY (Resumo Executivo) ============== -->
+<section class="summary" id="resumo">
+  <div class="summary-card">
+    <span class="analysis-eyebrow">RESUMO EXECUTIVO</span>
+    <h2>Sua <span class="gold">triagem automática</span></h2>
+    <p>Consolidação dos dados que você informou nas seções acima. Use como pré-análise — a análise jurídica definitiva é feita pela Dra. Raquel em até 48h.</p>
+
+    <div class="summary-grid">
+      <div class="sum-cell">
+        <div class="sum-label">⚖️ Elegibilidade</div>
+        <div id="sumElegibilidade"><span class="pill info"><span class="dot"></span>Aguardando dados</span></div>
+        <div class="sum-extra" id="sumElegibilidadeExtra">Preencha o quadro de análise acima.</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-label">📅 Prescrição</div>
+        <div id="sumPrescricao"><span class="pill info"><span class="dot"></span>Aguardando dados</span></div>
+        <div class="sum-extra" id="sumPrescricaoExtra">Informe mês e ano da aposentadoria.</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-label">📋 Documentação</div>
+        <div id="sumDocs"><span class="pill info"><span class="dot"></span><b id="sumDocsCount">0/7</b></span></div>
+        <div class="sum-extra" id="sumDocsExtra">Marque os documentos no checklist abaixo.</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-label">💰 Estimativa financeira</div>
+        <div class="sum-value gold" id="sumValor">—</div>
+        <div class="sum-extra" id="sumValorExtra">Use a calculadora para gerar.</div>
+      </div>
+    </div>
+
+    <a class="btn btn-gold calc-cta" id="ctaSummary" href="#" target="_blank" rel="noopener" style="margin: 0 auto; display: flex;">
+      💬 LEVAR MEU RESUMO PARA A DRA. RAQUEL
+    </a>
+  </div>
+</section>
+
 <!-- ============== CHECKLIST ============== -->
 <section class="checklist" id="checklist">
   <h2>📋 Checklist de Documentos</h2>
@@ -655,75 +1017,53 @@
     <div class="block-head" onclick="toggleBlock(this)">
       <div class="num">I</div>
       <div class="title">DOCUMENTOS PESSOAIS</div>
-      <div class="count"><span class="bc">0</span>/6</div>
+      <div class="count"><span class="bc">0</span>/3</div>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="block-body">
       <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">01.</span>RG e CPF (ou CNH com CPF)</span></label>
       <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">02.</span>Comprovante de residência atualizado (últimos 90 dias)</span></label>
       <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">03.</span>Comprovante de conta bancária (para receber o crédito)</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">04.</span>Procuração ao advogado (o escritório prepara)</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">05.</span>Contrato de honorários assinado (o escritório prepara)</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">06.</span>Declaração de hipossuficiência (se pedido de gratuidade)</span></label>
     </div>
   </div>
 
-  <!-- BLOCO II -->
+  <!-- BLOCO II — LICENÇA-PRÊMIO -->
   <div class="block" data-block="2">
     <div class="block-head" onclick="toggleBlock(this)">
       <div class="num">II</div>
-      <div class="title">DOCUMENTAÇÃO FUNCIONAL</div>
-      <div class="count"><span class="bc">0</span>/2</div>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-    <div class="block-body">
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">07.</span>Portaria ou decreto de nomeação no cargo</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">08.</span>Certidão de tempo de serviço/contribuição</span></label>
-    </div>
-  </div>
-
-  <!-- BLOCO III -->
-  <div class="block" data-block="3">
-    <div class="block-head" onclick="toggleBlock(this)">
-      <div class="num">III</div>
       <div class="title">LICENÇA-PRÊMIO (núcleo da ação)</div>
       <div class="count"><span class="bc">0</span>/1</div>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="block-body">
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">09.</span>Declaração do órgão sobre os quinquênios adquiridos</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">04.</span>Declaração do órgão sobre os quinquênios adquiridos</span></label>
     </div>
   </div>
 
-  <!-- BLOCO IV -->
+  <!-- BLOCO III — REMUNERAÇÃO -->
+  <div class="block" data-block="3">
+    <div class="block-head" onclick="toggleBlock(this)">
+      <div class="num">III</div>
+      <div class="title">REMUNERAÇÃO (base do cálculo)</div>
+      <div class="count"><span class="bc">0</span>/1</div>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="block-body">
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">05.</span>Últimos 2 contracheques da ativa</span></label>
+    </div>
+  </div>
+
+  <!-- BLOCO IV — APOSENTADORIA -->
   <div class="block" data-block="4">
     <div class="block-head" onclick="toggleBlock(this)">
       <div class="num">IV</div>
-      <div class="title">REMUNERAÇÃO (base do cálculo)</div>
-      <div class="count"><span class="bc">0</span>/5</div>
+      <div class="title">APOSENTADORIA</div>
+      <div class="count"><span class="bc">0</span>/2</div>
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
     <div class="block-body">
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">10.</span>Últimos 12 contracheques da ativa</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">11.</span>Demonstrativo da última remuneração integral como servidor ativo</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">12.</span>Tabela de vencimentos vigente do cargo</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">13.</span>Ficha financeira completa</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">14.</span>Comprovantes de gratificações, adicionais e vantagens</span></label>
-    </div>
-  </div>
-
-  <!-- BLOCO V -->
-  <div class="block" data-block="5">
-    <div class="block-head" onclick="toggleBlock(this)">
-      <div class="num">V</div>
-      <div class="title">APOSENTADORIA (se já aposentado)</div>
-      <div class="count"><span class="bc">0</span>/3</div>
-      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    </div>
-    <div class="block-body">
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">15.</span>Portaria ou ato concessivo da aposentadoria</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">16.</span>Publicação no DOU ou Diário Oficial</span></label>
-      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">17.</span>Carta de concessão da aposentadoria</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">06.</span>Publicação da aposentadoria no DOU ou Diário Oficial</span></label>
+      <label class="item"><input type="checkbox"><span class="item-label"><span class="num-mini">07.</span>Contracheque atual de aposentado</span></label>
     </div>
   </div>
 </section>
@@ -910,8 +1250,19 @@
   // ============== CALCULATOR ==============
   const fmtBRL = (v) => new Intl.NumberFormat('pt-BR', {
     style: 'currency', currency: 'BRL',
+    minimumFractionDigits: 2, maximumFractionDigits: 2
+  }).format(v);
+  const fmtBRLshort = (v) => new Intl.NumberFormat('pt-BR', {
+    style: 'currency', currency: 'BRL',
     minimumFractionDigits: 0, maximumFractionDigits: 0
   }).format(v);
+  const parseDateBR = (s) => {
+    if (!s) return null;
+    const d = new Date(s + 'T00:00:00');
+    return isNaN(d) ? null : d;
+  };
+  const addYears = (d, n) => { const x = new Date(d); x.setFullYear(x.getFullYear() + n); return x; };
+  const fmtDateBR = (d) => d ? d.toLocaleDateString('pt-BR') : '—';
 
   function calcular() {
     const n = parseInt(document.getElementById('numLicencas').value, 10) || 0;
@@ -929,8 +1280,13 @@
     const base = n * m * r;
     const comCorrecao = base * 1.20;
 
+    calcState.base = base;
+    calcState.comCorrecao = comCorrecao;
+    calcState.hasResult = true;
+
     document.getElementById('calcAmount').textContent = fmtBRL(base);
     document.getElementById('calcRangeHigh').textContent = fmtBRL(comCorrecao);
+    if (typeof updateSummary === 'function') updateSummary();
 
     let tip = "";
     if (base < 30000) tip = "💡 Valor abaixo da média — confirmar com análise documental";
@@ -956,15 +1312,307 @@
     if (btn) btn.addEventListener('click', calcular);
   }
 
+  // ============== ANALYSIS / PRESCRIPTION ==============
+  const analysisState = {
+    dataAposentadoria: null,
+    usouComplemento: null,
+    houveReq: 'nao',
+    dataProtocolo: null,
+    numProcesso: '',
+    situacaoReq: '',
+    dataResposta: null,
+    presc: { start: null, end: null, status: null, note: '' }
+  };
+
+  const calcState = { base: 0, comCorrecao: 0, hasResult: false };
+
+  const HOJE = new Date(new Date().toDateString());
+
+  function diffYearsMonthsDays(from, to) {
+    if (!from || !to) return null;
+    let years = to.getFullYear() - from.getFullYear();
+    let months = to.getMonth() - from.getMonth();
+    let days = to.getDate() - from.getDate();
+    if (days < 0) {
+      months -= 1;
+      const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+      days += prevMonth.getDate();
+    }
+    if (months < 0) { years -= 1; months += 12; }
+    return { years, months, days, totalDays: Math.round((to - from) / 86400000) };
+  }
+
+  function fmtRemaining(diff) {
+    if (!diff) return '—';
+    if (diff.totalDays < 0) {
+      const abs = Math.abs(diff.totalDays);
+      return `Prescrito há ${Math.floor(abs/365)} ano(s)`;
+    }
+    if (diff.years > 0) return `${diff.years} ano(s) e ${diff.months} mês(es)`;
+    if (diff.months > 0) return `${diff.months} mês(es) e ${diff.days} dia(s)`;
+    return `${diff.days} dia(s)`;
+  }
+
+  function setPill(el, kind, label) {
+    el.innerHTML = `<span class="pill ${kind}"><span class="dot"></span>${label}</span>`;
+  }
+
+  function validateDate(input, errEl) {
+    const val = input.value;
+    if (!val) {
+      input.classList.remove('invalid');
+      errEl.classList.remove('show');
+      return null;
+    }
+    const d = parseDateBR(val);
+    if (!d || d > HOJE) {
+      input.classList.add('invalid');
+      errEl.classList.add('show');
+      return null;
+    }
+    input.classList.remove('invalid');
+    errEl.classList.remove('show');
+    return d;
+  }
+
+  function readAnalysis() {
+    const mes = parseInt(document.getElementById('mesApos').value, 10);
+    const ano = parseInt(document.getElementById('anoApos').value, 10);
+    const anoErr = document.getElementById('anoAposErr');
+    const anoInput = document.getElementById('anoApos');
+    const currentYear = HOJE.getFullYear();
+    let dataApos = null;
+    if (mes && ano) {
+      if (ano < 1980 || ano > currentYear) {
+        anoInput.classList.add('invalid');
+        anoErr.classList.add('show');
+      } else {
+        anoInput.classList.remove('invalid');
+        anoErr.classList.remove('show');
+        dataApos = new Date(ano, mes - 1, 1);
+        if (dataApos > HOJE) dataApos = null;
+      }
+    } else {
+      anoInput.classList.remove('invalid');
+      anoErr.classList.remove('show');
+    }
+    analysisState.dataAposentadoria = dataApos;
+
+    const usouSim = document.getElementById('usouComplementoSim').checked;
+    const usouNao = document.getElementById('usouComplementoNao').checked;
+    analysisState.usouComplemento = usouSim ? 'sim' : (usouNao ? 'nao' : null);
+
+    analysisState.houveReq = document.getElementById('houveReqSim').checked ? 'sim' : 'nao';
+
+    if (analysisState.houveReq === 'sim') {
+      document.getElementById('reqDetails').classList.add('show');
+      const dp = document.getElementById('dataProtocolo');
+      const dpe = document.getElementById('dataProtocoloErr');
+      analysisState.dataProtocolo = validateDate(dp, dpe);
+
+      analysisState.numProcesso = document.getElementById('numProcesso').value.trim();
+      analysisState.situacaoReq = document.getElementById('situacaoReq').value;
+
+      const dr = document.getElementById('dataResposta');
+      const dre = document.getElementById('dataRespostaErr');
+      analysisState.dataResposta = validateDate(dr, dre);
+
+      // Esconder data resposta se "Sem resposta"
+      document.getElementById('dataRespostaWrap').style.display =
+        analysisState.situacaoReq === 'sem_resposta' ? 'none' : '';
+    } else {
+      document.getElementById('reqDetails').classList.remove('show');
+    }
+
+    // Hint sobre complemento
+    const hint = document.getElementById('usouComplementoHint');
+    if (analysisState.usouComplemento === 'sim') {
+      hint.innerHTML = '<span style="color:#E65100">⚠️ Período usado para complementação não pode ser convertido em pecúnia. Análise individualizada essencial.</span>';
+    } else if (analysisState.usouComplemento === 'nao') {
+      hint.innerHTML = '<span style="color:var(--ok)">✓ Boa notícia — esse cenário tipicamente preserva o direito à conversão.</span>';
+    } else {
+      hint.innerHTML = '';
+    }
+  }
+
+  function calcPrescricao() {
+    const panel = document.getElementById('prescPanel');
+    const state = analysisState;
+    const out = { start: null, end: null, status: null, note: '', remaining: null };
+
+    if (!state.dataAposentadoria) {
+      panel.classList.remove('show');
+      state.presc = out;
+      return;
+    }
+
+    // Regra 3: requerimento sem resposta — suspende alerta
+    if (state.houveReq === 'sim' && state.situacaoReq === 'sem_resposta') {
+      out.start = state.dataProtocolo || state.dataAposentadoria;
+      out.end = null;
+      out.status = 'suspenso';
+      out.note = 'Possível interrupção ou suspensão do prazo prescricional (pendência de resposta). Recomenda-se análise jurídica individualizada.';
+    }
+    // Regra 2: requerimento com resposta
+    else if (state.houveReq === 'sim' && state.dataResposta) {
+      out.start = state.dataResposta;
+      out.end = addYears(state.dataResposta, 5);
+    }
+    // Regra 1: sem requerimento administrativo
+    else {
+      out.start = state.dataAposentadoria;
+      out.end = addYears(state.dataAposentadoria, 5);
+    }
+
+    if (out.end) {
+      const diff = diffYearsMonthsDays(HOJE, out.end);
+      out.remaining = diff;
+      if (diff.totalDays < 0) out.status = 'prescrito';
+      else if (diff.totalDays < 180) out.status = 'proximo';
+      else out.status = 'no_prazo';
+    }
+
+    state.presc = out;
+
+    // Render
+    document.getElementById('prescStart').textContent = fmtDateBR(out.start);
+    document.getElementById('prescEnd').textContent = out.end ? fmtDateBR(out.end) : 'Suspenso';
+    document.getElementById('prescRemaining').textContent =
+      out.status === 'suspenso' ? 'Suspenso' : fmtRemaining(out.remaining);
+
+    const statusEl = document.getElementById('prescStatus');
+    const noteEl = document.getElementById('prescNote');
+    if (out.status === 'no_prazo') {
+      setPill(statusEl, 'ok', '✓ Dentro do prazo');
+      noteEl.textContent = '';
+    } else if (out.status === 'proximo') {
+      setPill(statusEl, 'warn', '⚠ Próximo da prescrição — agir nos próximos meses');
+      noteEl.textContent = '';
+    } else if (out.status === 'prescrito') {
+      setPill(statusEl, 'bad', '✕ Possível prescrição — análise jurídica essencial');
+      noteEl.textContent = 'A prescrição pode ser argumentada/superada em casos específicos. Consulte a Dra. Raquel.';
+    } else if (out.status === 'suspenso') {
+      setPill(statusEl, 'info', '↻ Suspenso — pendente de resposta administrativa');
+      noteEl.textContent = out.note;
+    } else {
+      statusEl.innerHTML = '';
+      noteEl.textContent = '';
+    }
+
+    panel.classList.add('show');
+  }
+
+  function updateSummary() {
+    const a = analysisState;
+    const presc = a.presc;
+
+    // Elegibilidade
+    const elEl = document.getElementById('sumElegibilidade');
+    const elExtra = document.getElementById('sumElegibilidadeExtra');
+    if (!a.dataAposentadoria) {
+      setPill(elEl, 'info', 'Aguardando dados');
+      elExtra.textContent = 'Preencha o quadro de análise acima.';
+    } else if (a.usouComplemento === 'sim') {
+      setPill(elEl, 'warn', 'Possível impedimento');
+      elExtra.textContent = 'Licença usada para complementar tempo de serviço. Confirmar com análise.';
+    } else if (a.usouComplemento === 'nao') {
+      setPill(elEl, 'ok', 'Elegível em tese');
+      elExtra.textContent = 'Direito tipicamente preservado. Confirmar com documentação.';
+    } else {
+      setPill(elEl, 'info', 'Necessita análise');
+      elExtra.textContent = 'Responda sobre uso para complementação.';
+    }
+
+    // Prescrição
+    const prEl = document.getElementById('sumPrescricao');
+    const prExtra = document.getElementById('sumPrescricaoExtra');
+    if (presc.status === 'no_prazo') {
+      setPill(prEl, 'ok', '✓ Dentro do prazo');
+      prExtra.textContent = `Prescreve em ${fmtDateBR(presc.end)}.`;
+    } else if (presc.status === 'proximo') {
+      setPill(prEl, 'warn', '⚠ Próximo da prescrição');
+      prExtra.textContent = `Prescreve em ${fmtDateBR(presc.end)} — agir já.`;
+    } else if (presc.status === 'prescrito') {
+      setPill(prEl, 'bad', '✕ Possível prescrição');
+      prExtra.textContent = 'Análise jurídica essencial para verificar exceções.';
+    } else if (presc.status === 'suspenso') {
+      setPill(prEl, 'info', '↻ Prazo suspenso');
+      prExtra.textContent = 'Aguardando resposta administrativa.';
+    } else {
+      setPill(prEl, 'info', 'Aguardando dados');
+      prExtra.textContent = 'Informe mês e ano da aposentadoria.';
+    }
+
+    // Documentação
+    const all = document.querySelectorAll('.item input[type="checkbox"]');
+    const done = document.querySelectorAll('.item input[type="checkbox"]:checked').length;
+    const total = all.length;
+    const docsEl = document.getElementById('sumDocs');
+    const docsExtra = document.getElementById('sumDocsExtra');
+    if (done === total && total > 0) {
+      setPill(docsEl, 'ok', `✓ Completa (${done}/${total})`);
+      docsExtra.textContent = 'Tudo pronto para iniciar a ação.';
+    } else if (done >= Math.ceil(total * 0.6)) {
+      setPill(docsEl, 'warn', `Quase lá (${done}/${total})`);
+      docsExtra.textContent = `Faltam ${total - done} documento(s).`;
+    } else {
+      setPill(docsEl, 'info', `Pendente (${done}/${total})`);
+      docsExtra.textContent = 'Marque os documentos no checklist abaixo.';
+    }
+
+    // Estimativa financeira
+    const valEl = document.getElementById('sumValor');
+    const valExtra = document.getElementById('sumValorExtra');
+    if (calcState.hasResult) {
+      valEl.textContent = fmtBRL(calcState.base);
+      valExtra.textContent = `Com SELIC estimada: ${fmtBRL(calcState.comCorrecao)}`;
+    } else {
+      valEl.textContent = '—';
+      valExtra.textContent = 'Use a calculadora para gerar.';
+    }
+
+    // WhatsApp link
+    const parts = [];
+    if (a.dataAposentadoria) parts.push(`aposentei em ${fmtDateBR(a.dataAposentadoria)}`);
+    if (presc.status === 'no_prazo' || presc.status === 'proximo') parts.push(`prescrição em ${fmtDateBR(presc.end)}`);
+    if (presc.status === 'prescrito') parts.push(`possível prescrição`);
+    if (presc.status === 'suspenso') parts.push(`requerimento sem resposta`);
+    if (calcState.hasResult) parts.push(`estimativa ${fmtBRL(calcState.base)}`);
+    parts.push(`${done}/${total} docs`);
+
+    const msg = `Olá, Dra. Raquel! Vi o dashboard e gostaria de levar meu resumo: ${parts.join(' · ')}. Quero agendar a reunião de diagnóstico gratuita.`;
+    document.getElementById('ctaSummary').href = `https://wa.me/${WHATS_PRIMARY}?text=${encodeURIComponent(msg)}`;
+  }
+
+  function refreshAnalysisAndSummary() {
+    readAnalysis();
+    calcPrescricao();
+    updateSummary();
+  }
+
+  function initAnalysis() {
+    const ids = ['mesApos', 'anoApos', 'dataProtocolo', 'numProcesso', 'situacaoReq', 'dataResposta'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) ['input', 'change'].forEach(ev => el.addEventListener(ev, refreshAnalysisAndSummary));
+    });
+    ['usouComplementoSim', 'usouComplementoNao', 'houveReqSim', 'houveReqNao'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', refreshAnalysisAndSummary);
+    });
+    refreshAnalysisAndSummary();
+  }
+
   // ============== INIT ==============
   document.addEventListener("DOMContentLoaded", () => {
     loadState();
     document.querySelectorAll('.item input[type="checkbox"]').forEach(cb => {
-      cb.addEventListener("change", updateProgress);
+      cb.addEventListener("change", () => { updateProgress(); updateSummary(); });
     });
     updateProgress();
     setWhatsLinks();
     initCalc();
+    initAnalysis();
   });
 </script>
 
